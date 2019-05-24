@@ -1,0 +1,1 @@
+const calculadora = new CalcController;
