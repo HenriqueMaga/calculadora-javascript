@@ -8,13 +8,13 @@ class CalcController{
         this.initialize();
     }
     initialize(){
-        this.exibirDisplay();
+        this.exibirDataHora();
         setInterval(()=>{
-            this.exibirDisplay();
+            this.exibirDataHora();
         }, 1000)
                 
     }
-    exibirDisplay() {
+    exibirDataHora() {
         this.data = this.currentDate.toLocaleDateString(this.locale);
         this.hora = this.currentDate.toLocaleTimeString(this.locale);
     }
