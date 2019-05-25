@@ -26,9 +26,25 @@ class CalcController{
         let botoes = document.querySelectorAll('#buttons > g, #parts > g');
         botoes.forEach(botao=>{
             this.addEventListenerAll(botao, 'click drag ', e=>{
-                console.log(botao.className.baseVal.replace('btn-',''));
+                let operador = botao.className.baseVal.replace('btn-','');
+                switch (operador){
+                    case 'igual' : operador = '=';
+                    break;
+                    case 'soma' : operador = '+';
+                    break;
+                    case 'subtracao' : operador = '-';
+                    break;
+                    case 'multiplicacao' : operador = 'x';
+                    break;
+                    case 'divisao' : operador = '/';
+                    break;
+                    case 'porcento' : operador = '%';
+                    break;
+                    case 'ponto' : operador = '.';
+                    break;
+                }
                 //brincando com o innerHTMl
-                this.displayCalc = botao.className.baseVal.replace('btn-','')
+                this.displayCalc = operador;
             });
             this.addEventListenerAll(botao, 'mouseover mouseup mousedown',e=>{
                 botao.style.cursor = 'pointer';
