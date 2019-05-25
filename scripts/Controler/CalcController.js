@@ -6,18 +6,33 @@ class CalcController{
         this._horaEl = document.querySelector('#hora');
         this._currentDate;
         this.initialize();
+        this.buttonInitialize();
     }
+
     initialize(){
         this.exibirDataHora();
         setInterval(()=>{
             this.exibirDataHora();
-        }, 1000)
+        }, 1000);
                 
     }
+
+    buttonInitialize(){
+        let botoes = document.querySelectorAll('#buttons > g, #parts > g');
+        botoes.forEach(botao=>{
+            botao.addEventListener('click', evento=>{
+                console.log(botao.className.baseVal.replace('btn-',''));
+                //brincando com o innerHTMl
+                this.displayCalc = botao.className.baseVal.replace('btn-','')
+            })
+        });
+    }
+
     exibirDataHora() {
         this.data = this.currentDate.toLocaleDateString(this.locale);
         this.hora = this.currentDate.toLocaleTimeString(this.locale);
     }
+
     get displayCalc(){
         this._displayCalcEl.innerHTML;
     }
