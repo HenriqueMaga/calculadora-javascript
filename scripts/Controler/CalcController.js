@@ -16,14 +16,22 @@ class CalcController{
         }, 1000);
                 
     }
+    addEventListenerAll(elemento, eventos, funcao){
+        eventos.split(' ').forEach(umEvento =>{
+            elemento.addEventListener(umEvento, funcao, false);
+        });
+    }
 
     buttonInitialize(){
         let botoes = document.querySelectorAll('#buttons > g, #parts > g');
         botoes.forEach(botao=>{
-            botao.addEventListener('click', evento=>{
+            this.addEventListenerAll(botao, 'click drag ', e=>{
                 console.log(botao.className.baseVal.replace('btn-',''));
                 //brincando com o innerHTMl
                 this.displayCalc = botao.className.baseVal.replace('btn-','')
+            });
+            this.addEventListenerAll(botao, 'mouseover mouseup mousedown',e=>{
+                botao.style.cursor = 'pointer';
             })
         });
     }
