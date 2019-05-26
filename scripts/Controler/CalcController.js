@@ -1,6 +1,7 @@
 class CalcController{
     constructor(){
         this._locale = 'pt_BR';
+        this._operacao = [];
         this._displayCalcEl = document.querySelector('#display');
         this._dataEl = document.querySelector('#data');
         this._horaEl = document.querySelector('#hora');
@@ -16,36 +17,106 @@ class CalcController{
         }, 1000);
                 
     }
+    //Função criada para adicionar em massa mais de um tipo de evento 
     addEventListenerAll(elemento, eventos, funcao){
         eventos.split(' ').forEach(umEvento =>{
             elemento.addEventListener(umEvento, funcao, false);
         });
     }
+    apagarTudo(){
+        this._operacao = [];
+    }
+    apagarEntrada(){
+        this._operacao.pop();
+    }
+    getUltimaOperacao(){
+        return this._operacao[this._operacao.length -1];
+    }
+    adicionarNaUltimaPosicao(numero){
+        this._operacao[this._operacao.length -1] = numero;
+    }
+    isOperator(operador){
+        return ['+', '-', '*', '/', '%'].indexOf(operador) > -1;
+    }
 
+    adicionarOperacao(operacao){
+
+        if(isNaN(this.getUltimaOperacao())){
+            if(this.isOperator(operacao)){
+                //Caso o último e o novo valor sejam Operadores de fato, substituiremos o anterior pelo novo
+                this.adicionarNaUltimaPosicao(operacao);
+            } else if(isNaN(operacao)){
+                //Tratar as codções para o Ponto e o Igual
+                let ponto = this.getUltimaOperacao().toString() + operacao.toString();
+                console.log(ponto);
+                this.adicionarNaUltimaPosicao(parseInt(ponto));
+                console.log(operacao);  
+            } else{
+                this._operacao.push(parseInt(operacao));
+            }
+        } else{
+            let novaOperacao = this.getUltimaOperacao().toString() + operacao.toString();
+            this.adicionarNaUltimaPosicao(parseInt(novaOperacao));
+        }
+
+        console.log(this._operacao);
+    }
+
+    //Função que irá identificar as operações realizadas 
+    executarBotao(botao){
+        switch (botao){
+            case 'ce' : this.apagarEntrada();
+            botao = this._operacao;
+                break;
+            case 'ac' : this.apagarTudo();
+                break;
+            case 'igual' : botao = '=';
+            this.adicionarOperacao(botao);
+                break;
+            case 'soma' : botao = '+';
+            this.adicionarOperacao(botao);
+                break;
+            case 'subtracao' : botao = '-';
+            this.adicionarOperacao(botao);
+                break;
+            case 'multiplicacao' : botao = '*';
+            this.adicionarOperacao(botao);
+                break;
+            case 'divisao' : botao = '/';
+            this.adicionarOperacao(botao);
+                break;
+            case 'porcento' : botao = '%';
+            this.adicionarOperacao(botao);
+                break;
+            case 'ponto' : botao = '.';
+            this.adicionarOperacao(botao);
+                break;
+            case '9':
+            case '8':
+            case '7':
+            case '6':
+            case '5':
+            case '4':
+            case '3':
+            case '2':
+            case '1':
+            case '0':
+                this.adicionarOperacao(parseInt(botao));
+                break;
+        }
+        //brincando com o innerHTMl
+        this.displayCalc = parseInt(botao);
+    }
+
+    //Função que inicia todas as funcionalidades dos botões
     buttonInitialize(){
         let botoes = document.querySelectorAll('#buttons > g, #parts > g');
         botoes.forEach(botao=>{
-            this.addEventListenerAll(botao, 'click drag ', e=>{
+            this.addEventListenerAll(botao, 'click drag', e=>{
                 let operador = botao.className.baseVal.replace('btn-','');
-                switch (operador){
-                    case 'igual' : operador = '=';
-                    break;
-                    case 'soma' : operador = '+';
-                    break;
-                    case 'subtracao' : operador = '-';
-                    break;
-                    case 'multiplicacao' : operador = 'x';
-                    break;
-                    case 'divisao' : operador = '/';
-                    break;
-                    case 'porcento' : operador = '%';
-                    break;
-                    case 'ponto' : operador = '.';
-                    break;
-                }
-                //brincando com o innerHTMl
-                this.displayCalc = operador;
+                this.executarBotao(operador);
             });
+
             this.addEventListenerAll(botao, 'mouseover mouseup mousedown',e=>{
                 botao.style.cursor = 'pointer';
             })
