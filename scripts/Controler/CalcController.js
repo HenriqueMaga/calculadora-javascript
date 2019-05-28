@@ -74,9 +74,6 @@ class CalcController{
                 this.adicionarNaUltimaPosicao(operacao);
             } else if(isNaN(operacao)){
                 //Tratar as codções para o Ponto e o Igual
-                let ponto = this.getUltimaOperacao().toString() + operacao.toString();
-                console.log(ponto);
-                this.adicionarNaUltimaPosicao(parseInt(ponto));
                 console.log(operacao);  
             } else{
                 this.pushOperador(operacao);
