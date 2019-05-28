@@ -15,6 +15,7 @@ class CalcController{
         setInterval(()=>{
             this.exibirDataHora();
         }, 1000);
+        this.exibirUltimoValorNoDisplay();
                 
     }
     //Função criada para adicionar em massa mais de um tipo de evento 
@@ -25,9 +26,11 @@ class CalcController{
     }
     apagarTudo(){
         this._operacao = [];
+        this.exibirUltimoValorNoDisplay();
     }
     apagarEntrada(){
         this._operacao.pop();
+        this.exibirUltimoValorNoDisplay();
     }
     getUltimaOperacao(){
         return this._operacao[this._operacao.length -1];
@@ -45,24 +48,39 @@ class CalcController{
         }
     }
     calcular(){
-        let ultimoOperador = this._operacao.pop();
-        let resultadoDoPar = eval(this._operacao.join(''));
-        console.log(resultadoDoPar);
+        
+        let ultimoOperador = '';
+        if(this._operacao.length >3){
+            ultimoOperador = this._operacao.pop();
+        }
 
-        this._operacao = [resultadoDoPar, ultimoOperador];
+        let resultadoDoPar = eval(this._operacao.join(''));
+
+        if(ultimoOperador == '%'){
+            resultadoDoPar /= 100;
+            this._operacao = [resultadoDoPar];
+        } else{
+            this._operacao = [resultadoDoPar];
+            if(ultimoOperador){
+                this._operacao.push(ultimoOperador);
+            }
+        }
+
+        console.log(resultadoDoPar);
 
         this.exibirUltimoValorNoDisplay();
 
     }
 
     exibirUltimoValorNoDisplay(){
-        let ultimoNumero
+        let ultimoNumero;
         for(let i = this._operacao.length-1; i>=0; i--){
             if(!this.isOperator(this._operacao[i])){
                 ultimoNumero = this._operacao[i];
                 break;
             }
         }
+        if(!ultimoNumero) ultimoNumero = 0;
         this.displayCalc = ultimoNumero;
     }
 
@@ -76,6 +94,7 @@ class CalcController{
                 //Tratar as codções para o Ponto e o Igual
                 console.log(operacao);  
             } else{
+                //Primeiro número digitado entra nessa condição
                 this.pushOperador(operacao);
                 this.exibirUltimoValorNoDisplay();
             }
@@ -83,6 +102,7 @@ class CalcController{
             this.pushOperador(operacao);
 
         } else{
+            //Todos os Números digitados normalmente exeto o primeiro
             let novaOperacao = this.getUltimaOperacao().toString() + operacao.toString();
             this.adicionarNaUltimaPosicao(parseInt(novaOperacao));
             this.exibirUltimoValorNoDisplay();
@@ -100,7 +120,7 @@ class CalcController{
             case 'ac' : this.apagarTudo();
                 break;
             case 'igual' : botao = '=';
-            this.adicionarOperacao(botao);
+            this.calcular();
                 break;
             case 'soma' : botao = '+';
             this.adicionarOperacao(botao);
