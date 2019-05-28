@@ -38,6 +38,33 @@ class CalcController{
     isOperator(operador){
         return ['+', '-', '*', '/', '%'].indexOf(operador) > -1;
     }
+    pushOperador(operador){
+        this._operacao.push(operador);
+        if(this._operacao.length > 3){
+            this.calcular();
+        }
+    }
+    calcular(){
+        let ultimoOperador = this._operacao.pop();
+        let resultadoDoPar = eval(this._operacao.join(''));
+        console.log(resultadoDoPar);
+
+        this._operacao = [resultadoDoPar, ultimoOperador];
+
+        this.exibirUltimoValorNoDisplay();
+
+    }
+
+    exibirUltimoValorNoDisplay(){
+        let ultimoNumero
+        for(let i = this._operacao.length-1; i>=0; i--){
+            if(!this.isOperator(this._operacao[i])){
+                ultimoNumero = this._operacao[i];
+                break;
+            }
+        }
+        this.displayCalc = ultimoNumero;
+    }
 
     adicionarOperacao(operacao){
 
@@ -52,11 +79,16 @@ class CalcController{
                 this.adicionarNaUltimaPosicao(parseInt(ponto));
                 console.log(operacao);  
             } else{
-                this._operacao.push(parseInt(operacao));
+                this.pushOperador(operacao);
+                this.exibirUltimoValorNoDisplay();
             }
+        } else if(this.isOperator(operacao)){
+            this.pushOperador(operacao);
+
         } else{
             let novaOperacao = this.getUltimaOperacao().toString() + operacao.toString();
             this.adicionarNaUltimaPosicao(parseInt(novaOperacao));
+            this.exibirUltimoValorNoDisplay();
         }
 
         console.log(this._operacao);
@@ -105,7 +137,7 @@ class CalcController{
                 break;
         }
         //brincando com o innerHTMl
-        this.displayCalc = parseInt(botao);
+        //this.displayCalc = parseInt(botao);
     }
 
     //Função que inicia todas as funcionalidades dos botões
