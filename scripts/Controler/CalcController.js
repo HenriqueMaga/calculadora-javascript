@@ -1,6 +1,8 @@
 class CalcController{
     constructor(){
         this._locale = 'pt_BR';
+        this._ultimaOperacao = '';
+        this._ultimoValor = '';
         this._operacao = [];
         this._displayCalcEl = document.querySelector('#display');
         this._dataEl = document.querySelector('#data');
@@ -47,14 +49,21 @@ class CalcController{
             this.calcular();
         }
     }
+    obterUltimaPosicao(){
+        return eval(this._operacao.join(''));
+    }
     calcular(){
         
         let ultimoOperador = '';
         if(this._operacao.length >3){
             ultimoOperador = this._operacao.pop();
+
+            this._ultimoValor = this.obterUltimaPosicao();
+            this._ultimaOperacao = this.obterUltimoItem();
+
         }
 
-        let resultadoDoPar = eval(this._operacao.join(''));
+        let resultadoDoPar = this.obterUltimaPosicao();
 
         if(ultimoOperador == '%'){
             resultadoDoPar /= 100;
@@ -72,14 +81,19 @@ class CalcController{
 
     }
 
-    exibirUltimoValorNoDisplay(){
-        let ultimoNumero;
+    obterUltimoItem(operador = true){
+        let ultimoItem;
         for(let i = this._operacao.length-1; i>=0; i--){
-            if(!this.isOperator(this._operacao[i])){
-                ultimoNumero = this._operacao[i];
+            if(!this.isOperator(this._operacao[i]) == operador){
+                ultimoItem = this._operacao[i];
                 break;
             }
         }
+        return ultimoItem;
+    }
+
+    exibirUltimoValorNoDisplay(){
+        let ultimoNumero = this.obterUltimoItem(true);
         if(!ultimoNumero) ultimoNumero = 0;
         this.displayCalc = ultimoNumero;
     }
@@ -115,30 +129,30 @@ class CalcController{
     executarBotao(botao){
         switch (botao){
             case 'ce' : this.apagarEntrada();
-            botao = this._operacao;
+                botao = this._operacao;
                 break;
             case 'ac' : this.apagarTudo();
                 break;
             case 'igual' : botao = '=';
-            this.calcular();
+                this.calcular();
                 break;
             case 'soma' : botao = '+';
-            this.adicionarOperacao(botao);
+                this.adicionarOperacao(botao);
                 break;
             case 'subtracao' : botao = '-';
-            this.adicionarOperacao(botao);
+                this.adicionarOperacao(botao);
                 break;
             case 'multiplicacao' : botao = '*';
             this.adicionarOperacao(botao);
                 break;
             case 'divisao' : botao = '/';
-            this.adicionarOperacao(botao);
+                this.adicionarOperacao(botao);
                 break;
             case 'porcento' : botao = '%';
-            this.adicionarOperacao(botao);
+                this.adicionarOperacao(botao);
                 break;
             case 'ponto' : botao = '.';
-            this.adicionarOperacao(botao);
+                this.adicionarOperacao(botao);
                 break;
             case '9':
             case '8':
