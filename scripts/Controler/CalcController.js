@@ -49,21 +49,37 @@ class CalcController{
             this.calcular();
         }
     }
-    obterUltimaPosicao(){
+    obterResultado(){
         return eval(this._operacao.join(''));
     }
     calcular(){
         
         let ultimoOperador = '';
-        if(this._operacao.length >3){
-            ultimoOperador = this._operacao.pop();
+        this._ultimaOperacao = this.obterUltimoItem();
 
-            this._ultimoValor = this.obterUltimaPosicao();
-            this._ultimaOperacao = this.obterUltimoItem();
+        if(this._operacao.length <3){
+            /*Ao clicar em igual com menos de três itens na array iremos usar a ultima operação e o último
+            *  valor da array (sendo o último digitado ou o último resultado) para realizar operaçõesem serie*/
+            let primeiroValor = this._operacao[0];
+            if(!this._ultimoValor){
+                this._ultimoValor = this.obterUltimoItem(false);
+            }
+            this._operacao = [primeiroValor, this._ultimaOperacao, this._ultimoValor];
 
         }
+        if(this._operacao.length >3){
 
-        let resultadoDoPar = this.obterUltimaPosicao();
+            ultimoOperador = this._operacao.pop();
+            this._ultimoValor = this.obterResultado();
+            console.log('passou no >3: ' + this._ultimoValor);
+        } else if(this._operacao.length == 3){
+            this._ultimoValor = this.obterUltimoItem(false);
+            console.log('passou no ==3: ' + this._ultimoValor);
+        }
+        console.log('ultimo valor' + this._ultimoValor);
+        console.log('ultima operacao' + this._ultimaOperacao);
+
+        let resultadoDoPar = this.obterResultado();
 
         if(ultimoOperador == '%'){
             resultadoDoPar /= 100;
@@ -75,8 +91,6 @@ class CalcController{
             }
         }
 
-        console.log(resultadoDoPar);
-
         this.exibirUltimoValorNoDisplay();
 
     }
@@ -84,16 +98,19 @@ class CalcController{
     obterUltimoItem(operador = true){
         let ultimoItem;
         for(let i = this._operacao.length-1; i>=0; i--){
-            if(!this.isOperator(this._operacao[i]) == operador){
+            if(this.isOperator(this._operacao[i]) == operador){
                 ultimoItem = this._operacao[i];
                 break;
             }
+        }
+        if(!ultimoItem){
+            ultimoItem = (operador) ? this._ultimaOperacao : this._ultimoValor;
         }
         return ultimoItem;
     }
 
     exibirUltimoValorNoDisplay(){
-        let ultimoNumero = this.obterUltimoItem(true);
+        let ultimoNumero = this.obterUltimoItem(false);
         if(!ultimoNumero) ultimoNumero = 0;
         this.displayCalc = ultimoNumero;
     }
