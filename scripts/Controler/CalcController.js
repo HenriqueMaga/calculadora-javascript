@@ -36,7 +36,7 @@ class CalcController{
         this._operacao.pop();
         this.exibirUltimoValorNoDisplay();
     }
-    getUltimaOperacao(){
+    obterUltimaOperacao(){
         return this._operacao[this._operacao.length -1];
     }
     adicionarNaUltimaPosicao(numero){
@@ -73,13 +73,13 @@ class CalcController{
 
             ultimoOperador = this._operacao.pop();
             this._ultimoValor = this.obterResultado();
-            console.log('passou no >3: ' + this._ultimoValor);
+
         } else if(this._operacao.length == 3){
             this._ultimoValor = this.obterUltimoItem(false);
-            console.log('passou no ==3: ' + this._ultimoValor);
+
         }
-        console.log('ultimo valor' + this._ultimoValor);
-        console.log('ultima operacao' + this._ultimaOperacao);
+        console.log('ultimo valor ' + this._ultimoValor);
+        console.log('ultima operacao ' + this._ultimaOperacao);
 
         let resultadoDoPar = this.obterResultado();
 
@@ -119,13 +119,10 @@ class CalcController{
 
     adicionarOperacao(operacao){
 
-        if(isNaN(this.getUltimaOperacao())){
+        if(isNaN(this.obterUltimaOperacao())){
             if(this.isOperator(operacao)){
                 //Caso o último e o novo valor sejam Operadores de fato, substituiremos o anterior pelo novo
                 this.adicionarNaUltimaPosicao(operacao);
-            } else if(isNaN(operacao)){
-                //Tratar as codções para o Ponto e o Igual
-                console.log(operacao);  
             } else{
                 //Primeiro número digitado entra nessa condição
                 this.pushOperador(operacao);
@@ -136,12 +133,24 @@ class CalcController{
 
         } else{
             //Todos os Números digitados normalmente exeto o primeiro
-            let novaOperacao = this.getUltimaOperacao().toString() + operacao.toString();
-            this.adicionarNaUltimaPosicao(parseInt(novaOperacao));
+            let novaOperacao = this.obterUltimaOperacao().toString() + operacao.toString();
+            this.adicionarNaUltimaPosicao(novaOperacao);
             this.exibirUltimoValorNoDisplay();
         }
 
         console.log(this._operacao);
+    }
+
+    incluirPonto(){
+        let ultimoItem = this.obterUltimaOperacao();
+        if(typeof ultimoItem === "string" && ultimoItem.split('').indexOf('.') > -1) return;
+
+        if(!ultimoItem || this.isOperator(ultimoItem)){
+            this.pushOperador('0.');
+        } else{
+            this.adicionarNaUltimaPosicao(ultimoItem.toString() + '.');
+        }
+        this.exibirUltimoValorNoDisplay();
     }
 
     //Função que irá identificar as operações realizadas 
@@ -171,7 +180,7 @@ class CalcController{
                 this.adicionarOperacao(botao);
                 break;
             case 'ponto' : botao = '.';
-                this.adicionarOperacao(botao);
+                this.incluirPonto();
                 break;
             case '9':
             case '8':
