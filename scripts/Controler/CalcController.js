@@ -28,6 +28,8 @@ class CalcController{
     }
     apagarTudo(){
         this._operacao = [];
+        this._ultimoValor = '';
+        this._ultimaOperacao = '';
         this.exibirUltimoValorNoDisplay();
     }
     apagarEntrada(){
