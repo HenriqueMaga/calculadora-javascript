@@ -10,6 +10,7 @@ class CalcController{
         this._currentDate;
         this.initialize();
         this.buttonInitialize();
+        this.iniciarTeclado();
     }
 
     initialize(){
@@ -24,6 +25,54 @@ class CalcController{
     addEventListenerAll(elemento, eventos, funcao){
         eventos.split(' ').forEach(umEvento =>{
             elemento.addEventListener(umEvento, funcao, false);
+        });
+    }
+    iniciarTeclado(){
+        addEventListener('keyup',evento =>{
+            console.log(evento.key);
+            switch (evento.key){
+                case 'Backspace' : 
+                    this.apagarEntrada();
+                    break;
+                case 'Escape' : 
+                    this.apagarTudo();
+                    break;
+                case 'Enter' :
+                case '=' :
+                    this.calcular();
+                    break;
+                case '+' :
+                    this.adicionarOperacao(evento.key);
+                    break;
+                case '-' :
+                    this.adicionarOperacao(evento.key);
+                    break;
+                case '*' :
+                    this.adicionarOperacao(evento.key);
+                    break;
+                case '/' :
+                    this.adicionarOperacao(evento.key);
+                    break;
+                case '%' :
+                    this.adicionarOperacao(evento.key);
+                    break;
+                case ',' :
+                case '.' :
+                    this.incluirPonto();
+                    break;
+                case '9':
+                case '8':
+                case '7':
+                case '6':
+                case '5':
+                case '4':
+                case '3':
+                case '2':
+                case '1':
+                case '0':
+                    this.adicionarOperacao(parseInt(evento.key));
+                    break;
+            }
         });
     }
     apagarTudo(){
