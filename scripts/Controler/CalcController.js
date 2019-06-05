@@ -19,7 +19,24 @@ class CalcController{
             this.exibirDataHora();
         }, 1000);
         this.exibirUltimoValorNoDisplay();
+        this.colarAreaDeTransferencia();
                 
+    }
+    copiarParaAreaDeTransferencia(){
+        let input = document.createElement('input');
+        console.log(this.displayCalc);
+        input.value = this.displayCalc;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('Copy');
+        input.remove();
+    }
+    colarAreaDeTransferencia(){
+        document.addEventListener('paste',e =>{
+            let texto = e.clipboardData.getData('Text');
+            this.displayCalc = parseFloat(texto);
+            this.pushOperador(texto);
+        });
     }
     //Função criada para adicionar em massa mais de um tipo de evento 
     addEventListenerAll(elemento, eventos, funcao){
@@ -29,7 +46,6 @@ class CalcController{
     }
     iniciarTeclado(){
         addEventListener('keyup',evento =>{
-            console.log(evento.key);
             switch (evento.key){
                 case 'Backspace' : 
                     this.apagarEntrada();
@@ -72,6 +88,9 @@ class CalcController{
                 case '0':
                     this.adicionarOperacao(parseInt(evento.key));
                     break;
+                case 'c':
+                    if(evento.ctrlKey) this.copiarParaAreaDeTransferencia();
+                    break;
             }
         });
     }
@@ -112,9 +131,7 @@ class CalcController{
             /*Ao clicar em igual com menos de três itens na array iremos usar a ultima operação e o último
             *  valor da array (sendo o último digitado ou o último resultado) para realizar operaçõesem serie*/
             let primeiroValor = this._operacao[0];
-            if(!this._ultimoValor){
-                this._ultimoValor = this.obterUltimoItem(false);
-            }
+            if(!this._ultimoValor) this._ultimoValor = this.obterUltimoItem(false);
             this._operacao = [primeiroValor, this._ultimaOperacao, this._ultimoValor];
 
         }
@@ -187,7 +204,6 @@ class CalcController{
             this.exibirUltimoValorNoDisplay();
         }
 
-        console.log(this._operacao);
     }
 
     incluirPonto(){
@@ -220,7 +236,7 @@ class CalcController{
                 this.adicionarOperacao(botao);
                 break;
             case 'multiplicacao' : botao = '*';
-            this.adicionarOperacao(botao);
+                this.adicionarOperacao(botao);
                 break;
             case 'divisao' : botao = '/';
                 this.adicionarOperacao(botao);
@@ -269,13 +285,13 @@ class CalcController{
     }
 
     get displayCalc(){
-        this._displayCalcEl.innerHTML;
+        return this._displayCalcEl.innerHTML;
     }
     set displayCalc(valor){
         this._displayCalcEl.innerHTML = valor;
     }
     get hora(){
-        this._horaEl.innerHTML;
+        return this._horaEl.innerHTML;
     }
     set hora(novaHora){
         this._horaEl.innerHTML = novaHora;
