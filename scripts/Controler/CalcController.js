@@ -174,7 +174,7 @@ class CalcController{
                 this.adicionarNaUltimaPosicao(operacao);
             } else{
                 //Primeiro número digitado entra nessa condição
-                this.pushOperador(operacao);
+                if(operacao != 0) this.pushOperador(operacao);
                 this.exibirUltimoValorNoDisplay();
             }
         } else if(this.isOperator(operacao)){
