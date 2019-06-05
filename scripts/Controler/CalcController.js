@@ -307,10 +307,12 @@ class CalcController{
 
             this.addEventListenerAll(botao, 'mouseover mouseup mousedown',e=>{
                 botao.style.cursor = 'pointer';
-            })
+            });
         });
     }
-
+    setError(){
+        return this.displayCalc = 'Error';
+    }
     exibirDataHora() {
         this.data = this.currentDate.toLocaleDateString(this.locale);
         this.hora = this.currentDate.toLocaleTimeString(this.locale);
@@ -320,19 +322,23 @@ class CalcController{
         return this._displayCalcEl.innerHTML;
     }
     set displayCalc(valor){
-        this._displayCalcEl.innerHTML = valor;
+        if(valor.toString().length > 10){
+            this.setError();
+            return false;
+        }
+        return this._displayCalcEl.innerHTML = valor;
     }
     get hora(){
         return this._horaEl.innerHTML;
     }
     set hora(novaHora){
-        this._horaEl.innerHTML = novaHora;
+        return this._horaEl.innerHTML = novaHora;
     }
     get data(){
-        this._dataEl.innerHTML;
+        return this._dataEl.innerHTML;
     }
     set data(novaData){
-        this._dataEl.innerHTML = novaData;
+        return this._dataEl.innerHTML = novaData;
     }
     get currentDate(){
         return new Date();
