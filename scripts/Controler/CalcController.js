@@ -2,6 +2,7 @@ class CalcController{
     constructor(){
 
         this._respostaCerta = new Audio('certa-resposta.mp3');
+        this._erro = new Audio('erro.mp3');
         this._audio = new Audio('click.mp3');
         this._audioOnOff = false;
         this._locale = 'pt_BR';
@@ -47,6 +48,13 @@ class CalcController{
         if(this._audioOnOff){
             this._respostaCerta.currentTime = 0;
             this._respostaCerta.play();
+        }
+    }
+
+    playErro(){
+        if(this._audioOnOff){
+            this._erro.currentTime = 0;
+            this._erro.play();
         }
     }
 
@@ -324,6 +332,7 @@ class CalcController{
     set displayCalc(valor){
         if(valor.toString().length > 10){
             this.setError();
+            this.playErro();
             return false;
         }
         return this._displayCalcEl.innerHTML = valor;
