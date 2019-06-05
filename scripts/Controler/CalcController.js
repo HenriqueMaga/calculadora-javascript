@@ -38,12 +38,14 @@ class CalcController{
     
     playAudio(){
         if(this._audioOnOff){
+            this._audio.currentTime = 0;
             this._audio.play();
         }
     }
 
     playRespostaCerta(){
         if(this._audioOnOff){
+            this._respostaCerta.currentTime = 0;
             this._respostaCerta.play();
         }
     }
@@ -72,6 +74,7 @@ class CalcController{
     }
     iniciarTeclado(){
         addEventListener('keyup',evento =>{
+            this.playAudio();
             switch (evento.key){
                 case 'Backspace' : 
                     this.apagarEntrada();
@@ -82,6 +85,7 @@ class CalcController{
                 case 'Enter' :
                 case '=' :
                     this.calcular();
+                    this.playRespostaCerta();
                     break;
                 case '+' :
                     this.adicionarOperacao(evento.key);
