@@ -1,5 +1,9 @@
 class CalcController{
     constructor(){
+
+        this._respostaCerta = new Audio('certa-resposta.mp3');
+        this._audio = new Audio('click.mp3');
+        this._audioOnOff = false;
         this._locale = 'pt_BR';
         this._ultimaOperacao = '';
         this._ultimoValor = '';
@@ -20,8 +24,30 @@ class CalcController{
         }, 1000);
         this.exibirUltimoValorNoDisplay();
         this.colarAreaDeTransferencia();
-                
+
+        document.querySelectorAll('.btn-ac').forEach(botao =>{
+            botao.addEventListener('dblclick', umEvento =>{
+                this.toggleAudio();
+            })
+        });
     }
+
+    toggleAudio(){
+        this._audioOnOff = !this._audioOnOff;
+    }
+    
+    playAudio(){
+        if(this._audioOnOff){
+            this._audio.play();
+        }
+    }
+
+    playRespostaCerta(){
+        if(this._audioOnOff){
+            this._respostaCerta.play();
+        }
+    }
+
     copiarParaAreaDeTransferencia(){
         let input = document.createElement('input');
         console.log(this.displayCalc);
@@ -220,6 +246,7 @@ class CalcController{
 
     //Função que irá identificar as operações realizadas 
     executarBotao(botao){
+        this.playAudio();
         switch (botao){
             case 'ce' : this.apagarEntrada();
                 botao = this._operacao;
@@ -228,6 +255,7 @@ class CalcController{
                 break;
             case 'igual' : botao = '=';
                 this.calcular();
+                this.playRespostaCerta();
                 break;
             case 'soma' : botao = '+';
                 this.adicionarOperacao(botao);
